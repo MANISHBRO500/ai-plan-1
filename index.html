@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Assistant with Text Input</title>
-    <link rel="stylesheet" href="ai.css">
+    <title>Voice Assistant</title>
+    <style>
+        #featureImage {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            display: none; /* Initially hidden */
+        }
+        #response {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        #queryInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Voice Assistant</h1>
 
-        <!-- Button to Start Listening -->
-        <button id="startButton" onclick="startVoiceRecognition()">Start Listening</button>
-
-        <!-- Text Input to Display Recognized Speech -->
-        <input type="text" id="queryInput" placeholder="Say something..." readonly>
-        
-        <!-- Submit Button -->
-        <button id="submitBtn">Submit</button>
-
-        <!-- Display the AI response -->
+    <div>
+        <button onclick="startVoiceRecognition()">Start Voice Recognition</button>
+        <input type="text" id="queryInput" placeholder="Ask something..." />
         <div id="response"></div>
+        <div id="locationResult"></div>
+        <img id="featureImage" src="" alt="Feature Image" />
     </div>
 
-    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/annyang@2.6.1/annyang.min.js"></script>
+    <script src="your-merged-js.js"></script>
+
 </body>
 </html>
