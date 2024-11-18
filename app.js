@@ -1,6 +1,7 @@
 const openAiApiKey = 'YOUR_OPENAI_API_KEY'; // Replace with OpenAI API key
 const weatherApiKey = '839affe97e615679d4dbb8d01a9d02aa'; // Replace with Weather API key
 const googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with Google Maps API key
+const unsplashApiKey = 'YOUR_UNSPLASH_API_KEY'; // Replace with Unsplash API key
 
 // Initialize Speech Recognition
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
@@ -42,20 +43,18 @@ async function handleQuery() {
     // Process different types of queries based on keywords
     if (query.includes("weather")) {
         responseText = await getWeather(query);
-        featureImage.src = 'weather-image.jpg'; // Set weather image
-        featureImage.style.display = 'block'; // Display weather image
+        featureImage.src = await searchImage('weather'); // Fetch relevant image from Unsplash
     } else if (query.includes("news")) {
         responseText = await fetchNews();
-        featureImage.src = 'news-image.jpg'; // Set news image
-        featureImage.style.display = 'block'; // Display news image
+        featureImage.src = await searchImage('news'); // Fetch relevant image from Unsplash
     } else if (query.includes("location")) {
         responseText = await getUserLocation();
-        featureImage.src = 'location-image.jpg'; // Set location image
-        featureImage.style.display = 'block'; // Display location image
+        featureImage.src = await searchImage('location'); // Fetch relevant image from Unsplash
     } else {
         responseText = await fetchOpenAiResponse(query); // Default to OpenAI response
     }
 
+    featureImage.style.display = 'block'; // Display the image
     responseElement.innerHTML = responseText; // Show response in the UI
     speak(responseText); // Use Text-to-Speech to speak the response
 }
@@ -139,6 +138,24 @@ async function getUserLocation() {
         });
     } else {
         return "Geolocation is not supported by your browser.";
+    }
+}
+
+// Function to search for an image from Unsplash based on query keyword
+async function searchImage(query) {
+    const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${unsplashApiKey}`;
+    
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+            return data.results[0].urls.regular; // Return the URL of the first image
+        } else {
+            return 'default-image.jpg'; // Default image if no results found
+        }
+    } catch (error) {
+        console.error("Image Search Error:", error);
+        return 'default-image.jpg'; // Return a default image in case of error
     }
 }
 
