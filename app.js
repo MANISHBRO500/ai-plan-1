@@ -7,7 +7,7 @@ const unsplashApiKey = 'rBKbGl1OWYfS4cY6-rqeQt10GkTtk4BY8h0SMa5_d98'; // Replace
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'en-US';
 recognition.interimResults = false;
-recognition.continuous = false; // Listen only once for each query
+recognition.continuous = false;
 
 // Text-to-Speech Function
 function speak(text) {
@@ -18,45 +18,53 @@ function speak(text) {
 
 // Start listening with wave animation
 function startVoiceRecognition() {
-    document.getElementById("queryInput").value = ''; // Clear the input field
-    recognition.start(); // Start the voice recognition process
+    document.getElementById("queryInput").value = '';
+    recognition.start();
     recognition.onresult = async (event) => {
         const voiceQuery = event.results[0][0].transcript;
-        document.getElementById('queryInput').value = voiceQuery; // Set the recognized text in the input field
-        await handleQuery(); // Handle the query after recognizing the voice input
+        document.getElementById('queryInput').value = voiceQuery;
+        await handleQuery();
     };
 }
 
 // Handle user queries
 async function handleQuery() {
-    recognition.stop(); // Stop recognition after processing
-    const query = document.getElementById("queryInput").value.toLowerCase(); // Get the text input
+    recognition.stop();
+    const query = document.getElementById("queryInput").value.toLowerCase();
     const responseElement = document.getElementById("response");
     const locationElement = document.getElementById("locationResult");
-    const featureImage = document.getElementById("featureImage"); // Image element to show
+    const featureImage = document.getElementById("featureImage");
 
-    responseElement.innerHTML = "Thinking..."; // Display thinking message
-    featureImage.style.display = "none"; // Hide image initially
+    responseElement.innerHTML = "Thinking...";
+    featureImage.style.display = "none";
 
     let responseText = "";
+    let imageUrl = "";
 
-    // Process different types of queries based on keywords
     if (query.includes("weather")) {
         responseText = await getWeather(query);
-        featureImage.src = await searchImage('weather'); // Fetch relevant image from Unsplash
+        imageUrl = await searchImage('weather');
     } else if (query.includes("news")) {
         responseText = await fetchNews();
-        featureImage.src = await searchImage('news'); // Fetch relevant image from Unsplash
+        imageUrl = await searchImage('news');
     } else if (query.includes("location")) {
         responseText = await getUserLocation();
-        featureImage.src = await searchImage('location'); // Fetch relevant image from Unsplash
+        imageUrl = await searchImage('location');
     } else {
-        responseText = await fetchOpenAiResponse(query); // Default to OpenAI response
+        responseText = await fetchOpenAiResponse(query);
+        imageUrl = await searchImage('AI query');
     }
 
-    featureImage.style.display = 'block'; // Display the image
-    responseElement.innerHTML = responseText; // Show response in the UI
-    speak(responseText); // Use Text-to-Speech to speak the response
+    // Display the image if a valid URL is set
+    if (imageUrl && imageUrl !== window.location.href) {
+        featureImage.src = imageUrl;
+        featureImage.style.display = 'block';
+    } else {
+        featureImage.style.display = 'none';
+    }
+
+    responseElement.innerHTML = responseText;
+    speak(responseText);
 }
 
 // Fetch response from OpenAI API
@@ -149,21 +157,24 @@ async function searchImage(query) {
         const res = await fetch(url);
         const data = await res.json();
         if (data.results && data.results.length > 0) {
-            return data.results[0].urls.regular; // Return the URL of the first image
+            const imageUrl = data.results[0].urls.regular;
+            console.log("Image URL:", imageUrl);
+            return imageUrl; 
         } else {
-            return 'default-image.jpg'; // Default image if no results found
+            console.log("No image results found");
+            return 'https://via.placeholder.com/400x300?text=No+Image+Found';
         }
     } catch (error) {
         console.error("Image Search Error:", error);
-        return 'default-image.jpg'; // Return a default image in case of error
+        return 'https://via.placeholder.com/400x300?text=Error+Loading+Image';
     }
 }
 
 // Wake-up trigger using Annyang.js
 if (window.annyang) {
     const commands = {
-        "hey buddy": startVoiceRecognition // Trigger the start of voice recognition
+        "hey buddy": startVoiceRecognition
     };
-    annyang.addCommands(commands); // Add the voice command
-    annyang.start({ continuous: true }); // Start Annyang listening
+    annyang.addCommands(commands);
+    annyang.start({ continuous: true });
 }
