@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Assistant - Hey Buddy</title>
-<link rel="stylesheet" href="ai.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant with Text Input</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>AI Assistant - Hey Buddy</h1>
-        <input type="text" id="queryInput" placeholder="Ask anything..." readonly />
-        <button onclick="handleQuery()">Ask</button>
-        <canvas id="waveCanvas"></canvas>
+        <h1>Voice Assistant</h1>
+
+        <!-- Button to Start Listening -->
+        <button id="startButton" onclick="startVoiceRecognition()">Start Listening</button>
+
+        <!-- Text Input to Display Recognized Speech -->
+        <input type="text" id="queryInput" placeholder="Say something..." readonly>
+        
+        <!-- Submit Button -->
+        <button id="submitBtn">Submit</button>
+
+        <!-- Display the AI response -->
         <div id="response"></div>
-        <div id="locationResult"></div>
     </div>
-<script src="app.js"></script>
+
+    <script src="app.js"></script>
 </body>
 </html>
