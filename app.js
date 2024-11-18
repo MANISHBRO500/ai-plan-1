@@ -14,6 +14,7 @@ function speak(text) {
 // Start listening for voice input
 function startVoiceRecognition() {
     recognition.start(); // Start the recognition process
+    document.getElementById('queryInput').value = ''; // Clear the input field when starting a new recognition session
     recognition.onresult = async (event) => {
         const voiceQuery = event.results[0][0].transcript; // Capture the recognized text
         console.log('Recognized Voice:', voiceQuery); // Log the recognized text for debugging
@@ -30,6 +31,9 @@ async function handleQuery() {
     const query = document.getElementById('queryInput').value.toLowerCase(); // Get the text input
     const responseElement = document.getElementById('response');
     responseElement.innerHTML = 'Processing...';
+
+    // Clear the text input field after processing the query
+    document.getElementById('queryInput').value = '';
 
     let responseText = '';
 
