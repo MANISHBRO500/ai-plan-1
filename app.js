@@ -28,12 +28,14 @@ function startVoiceRecognition() {
 
 // Handle the text input for weather or math queries
 async function handleQuery() {
-    const query = document.getElementById('queryInput').value.toLowerCase(); // Get the text input
+    const queryInputField = document.getElementById('queryInput');
+    const query = queryInputField.value.toLowerCase(); // Get the text input
     const responseElement = document.getElementById('response');
+    
     responseElement.innerHTML = 'Processing...';
-
-    // Clear the text input field after processing the query
-    document.getElementById('queryInput').value = '';
+    
+    // Clear the text input field before processing the query
+    queryInputField.value = '';
 
     let responseText = '';
 
@@ -56,7 +58,7 @@ async function handleQuery() {
 // Fetch weather info using OpenWeather API (make sure to replace with a valid key)
 async function getWeather(query) {
     const location = query.split('in ')[1] || 'New York'; // Default to New York if no location is mentioned
-    const apiKey = '839affe97e615679d4dbb8d01a9d02aa'; // Replace with your OpenWeather API key
+    const apiKey = 'YOUR_OPENWEATHER_API_KEY'; // Replace with your OpenWeather API key
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
 
     try {
