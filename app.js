@@ -1,5 +1,5 @@
 const openAiApiKey = 'YOUR_OPENAI_API_KEY'; // Replace with OpenAI API key
-const weatherApiKey = 'YOUR_WEATHER_API_KEY'; // Replace with Weather API key
+const weatherApiKey = '839affe97e615679d4dbb8d01a9d02aa'; // Replace with Weather API key
 const googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with Google Maps API key
 
 // Initialize Speech Recognition
