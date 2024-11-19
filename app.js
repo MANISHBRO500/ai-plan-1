@@ -177,4 +177,4 @@ if (window.annyang) {
     };
     annyang.addCommands(commands);
     annyang.start({ continuous: true });
-} IN THIS CODE THE AI IS NOT ABLE TO PUFORM THE MATHEMATICAL PROBLEMS
+} 
