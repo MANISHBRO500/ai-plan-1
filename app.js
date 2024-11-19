@@ -177,4 +177,4 @@ if (window.annyang) {
     };
     annyang.addCommands(commands);
     annyang.start({ continuous: true });
-} FIX AND GIVE COMPLETE ANS
+}
