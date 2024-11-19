@@ -7,7 +7,7 @@ const unsplashApiKey = 'rBKbGl1OWYfS4cY6-rqeQt10GkTtk4BY8h0SMa5_d98'; // Replace
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = 'en-US';
 recognition.interimResults = false;
-recognition.continuous = true; // Enable continuous listening
+recognition.continuous = false;
 
 // Text-to-Speech Function
 function speak(text) {
@@ -16,32 +16,23 @@ function speak(text) {
     speechSynthesis.speak(utterance);
 }
 
-// Start listening with voice recognition
+// Start listening with wave animation
 function startVoiceRecognition() {
     document.getElementById("queryInput").value = '';
     recognition.start();
-
     recognition.onresult = async (event) => {
-        const voiceQuery = event.results[event.results.length - 1][0].transcript;
+        const voiceQuery = event.results[0][0].transcript;
         document.getElementById('queryInput').value = voiceQuery;
         await handleQuery();
     };
-
-    recognition.onerror = (event) => {
-        console.error("Speech Recognition Error:", event.error);
-        document.getElementById('response').innerHTML = "Microphone error. Please try again.";
-    };
-
-    recognition.onend = () => {
-        console.log("Speech recognition ended. Restarting...");
-        recognition.start(); // Restart recognition to keep listening
-    };
 }
 
-// Handle user queries with math detection
+// Handle user queries
 async function handleQuery() {
+    recognition.stop();
     const query = document.getElementById("queryInput").value.toLowerCase();
     const responseElement = document.getElementById("response");
+    const locationElement = document.getElementById("locationResult");
     const featureImage = document.getElementById("featureImage");
 
     responseElement.innerHTML = "Thinking...";
@@ -50,15 +41,7 @@ async function handleQuery() {
     let responseText = "";
     let imageUrl = "";
 
-    // Check for math-related queries using a regular expression
-    const mathRegex = /^[0-9+\-*/^().\s]+$/;
-    if (mathRegex.test(query)) {
-        try {
-            responseText = `The result is ${eval(query)}`;
-        } catch (error) {
-            responseText = "I couldn't process the mathematical query.";
-        }
-    } else if (query.includes("weather")) {
+    if (query.includes("weather")) {
         responseText = await getWeather(query);
         imageUrl = await searchImage('weather');
     } else if (query.includes("news")) {
@@ -72,6 +55,7 @@ async function handleQuery() {
         imageUrl = await searchImage('AI query');
     }
 
+    // Display the image if a valid URL is set
     if (imageUrl && imageUrl !== window.location.href) {
         featureImage.src = imageUrl;
         featureImage.style.display = 'block';
@@ -165,13 +149,21 @@ async function getUserLocation() {
     }
 }
 
-// Function to search for an image from Unsplash
+// Function to search for an image from Unsplash based on query keyword
 async function searchImage(query) {
     const url = `https://api.unsplash.com/search/photos?query=${query}&client_id=${unsplashApiKey}`;
+    
     try {
         const res = await fetch(url);
         const data = await res.json();
-        return data.results[0]?.urls.regular || 'https://via.placeholder.com/400x300?text=No+Image+Found';
+        if (data.results && data.results.length > 0) {
+            const imageUrl = data.results[0].urls.regular;
+            console.log("Image URL:", imageUrl);
+            return imageUrl; 
+        } else {
+            console.log("No image results found");
+            return 'https://via.placeholder.com/400x300?text=No+Image+Found';
+        }
     } catch (error) {
         console.error("Image Search Error:", error);
         return 'https://via.placeholder.com/400x300?text=Error+Loading+Image';
@@ -185,4 +177,4 @@ if (window.annyang) {
     };
     annyang.addCommands(commands);
     annyang.start({ continuous: true });
-}
+} IN THIS CODE THE AI IS NOT ABLE TO PUFORM THE MATHEMATICAL PROBLEMS
