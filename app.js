@@ -1,9 +1,9 @@
 // API Keys
-const openAiApiKey = 'YOUR_OPENAI_API_KEY'; // Replace with OpenAI API key
-const weatherApiKey = 'YOUR_WEATHER_API_KEY'; // Replace with Weather API key
+const openAiApiKey = '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'; // Replace with OpenAI API key
+const weatherApiKey = '839affe97e615679d4dbb8d01a9d02aa'; // Replace with Weather API key
 const newsApiKey = 'YOUR_NEWS_API_KEY'; // Replace with News API key
 const googleMapsApiKey = 'YOUR_GOOGLE_MAPS_API_KEY'; // Replace with Google Maps API key
-const unsplashApiKey = 'YOUR_UNSPLASH_API_KEY'; // Replace with Unsplash API key
+const unsplashApiKey = 'rBKbGl1OWYfS4cY6-rqeQt10GkTtk4BY8h0SMa5_d98'; // Replace with Unsplash API key
 
 // Initialize Speech Recognition
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
