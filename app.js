@@ -27,12 +27,11 @@ function startVoiceRecognition() {
     };
 }
 
-// Handle user queries
+// Handle user queries with math detection
 async function handleQuery() {
     recognition.stop();
     const query = document.getElementById("queryInput").value.toLowerCase();
     const responseElement = document.getElementById("response");
-    const locationElement = document.getElementById("locationResult");
     const featureImage = document.getElementById("featureImage");
 
     responseElement.innerHTML = "Thinking...";
@@ -41,7 +40,16 @@ async function handleQuery() {
     let responseText = "";
     let imageUrl = "";
 
-    if (query.includes("weather")) {
+    // Check for math-related queries using a regular expression
+    const mathRegex = /^[0-9+\-*/^().\s]+$/;
+    if (mathRegex.test(query)) {
+        try {
+            // Evaluate simple math queries locally
+            responseText = `The result is ${eval(query)}`;
+        } catch (error) {
+            responseText = "I couldn't process the mathematical query.";
+        }
+    } else if (query.includes("weather")) {
         responseText = await getWeather(query);
         imageUrl = await searchImage('weather');
     } else if (query.includes("news")) {
@@ -157,11 +165,8 @@ async function searchImage(query) {
         const res = await fetch(url);
         const data = await res.json();
         if (data.results && data.results.length > 0) {
-            const imageUrl = data.results[0].urls.regular;
-            console.log("Image URL:", imageUrl);
-            return imageUrl; 
+            return data.results[0].urls.regular;
         } else {
-            console.log("No image results found");
             return 'https://via.placeholder.com/400x300?text=No+Image+Found';
         }
     } catch (error) {
